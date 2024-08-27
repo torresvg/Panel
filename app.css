@@ -17,7 +17,7 @@ label[data-testid="stMetricLabel"] p{
 /* Estilo de valor de métricas*/
 div[data-testid="stMetricValue"]{
    font-weight:bold;
-   color: #82858d;
+   color: #777e91;
 }
 
 /*Estilos para tablas*/
@@ -47,4 +47,9 @@ div[data-testid="stMetricValue"]{
 
 .dashboardTable tbody tr:nth-of-type(even) {
    background-color: #f3f3f3;
+}
+
+header {
+   text-align: center;
+   font-size: 2em; /* Ajusta el tamaño según tus necesidades */
 }
