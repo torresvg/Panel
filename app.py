@@ -9,7 +9,7 @@ import utils
 
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
 
-color_discrete_sequence=['#ef9c66','#fcdc94','#c8cfa0','#78aba8','#55ad9b','#365e32','#81a263','#e7d37f']
+color_discrete_sequence=['#ef9c66','#fcdc94','#c8cfa0','#78aba8','#55ad9b']
 
 st.set_page_config(
     page_title='Dashboard',
@@ -17,14 +17,15 @@ st.set_page_config(
     layout='wide'
 )
 utils.local_css('app.css')
+
 #
 #*********************** GRAFICA **************************#
 #
 #st.title("Cantidad cortes de:blue[ fibra]")
 
-doc1 = pd.ExcelFile('/Users/ValentinaGaviria/OneDrive - Telco Soluciones y Servicios/Documentos/Telefonica/Prueba/Bitacora2024.xlsx')
-doc2 = pd.ExcelFile('/Users/ValentinaGaviria/OneDrive - Telco Soluciones y Servicios/Documentos/Telefonica/Prueba/Bitacora2023.xlsx')
-doc3 = pd.ExcelFile('/Users/ValentinaGaviria/OneDrive - Telco Soluciones y Servicios/Documentos/Telefonica/Prueba/Zonas.xlsx')
+doc1 = pd.ExcelFile('/Users/ValentinaGaviria/OneDrive - Telco Soluciones y Servicios/Documentos/Telefonica/Panel/Bitacora2024.xlsx')
+doc2 = pd.ExcelFile('/Users/ValentinaGaviria/OneDrive - Telco Soluciones y Servicios/Documentos/Telefonica/Panel/Bitacora2023.xlsx')
+doc3 = pd.ExcelFile('/Users/ValentinaGaviria/OneDrive - Telco Soluciones y Servicios/Documentos/Telefonica/Panel/Zonas.xlsx')
 
 df1 = doc1.parse('Cortes de Fibra')  
 df2 = doc2.parse('Cortes de Fibra')
@@ -46,47 +47,48 @@ c = c.dropna(how='any', subset=['CAUSA'])
 discard = ['Visita_Fallida']
 c = c[~c.CAUSA.str.contains('|'.join(discard))]
 c['MES'] = c['HORA_INICIO'].dt.strftime('%B')
-c['AÑO '] = c['HORA_INICIO'].dt.strftime('%Y')
+c['AÑO'] = c['HORA_INICIO'].dt.strftime('%Y')
 c = c.dropna(subset=['Afectación'])
 
 cc1, cc2 = st.columns([50, 50])
 with cc1:
-    dffibracausa = c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index().sort_values(by='Afectación')
+    dffibracausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
     fig = px.bar(dffibracausa,x="CAUSA",y="Afectación",title='CORTES DE FIBRA POR CAUSA',color='CAUSA',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig), use_container_width=True)
 with cc2:
-    dfprincausa= c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index()
+    dfprincausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
     fig = px.bar(dfprincausa,x="CAUSA", y="Afectación",title='PRINCIPALES CAUSAS',color='CAUSA', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
     
 cc1, cc2 = st.columns([50, 50])
 with cc1:
-    dffibracausa= c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index()
+    dffibracausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
     fig = px.bar(dffibracausa,x="CAUSA", y="Afectación",title='CORTES DE FIBRA POR ZONA',color='CAUSA',color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 with cc2:
-    dffibracausa= c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index()
+    dffibracausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
+    #dffibracausa= c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index()
     fig = px.bar(dffibracausa,x="CAUSA", y="Afectación",title='CORTES DE FIBRA POR ZONA',color='CAUSA',color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 
 with st.container():
-    dfcantfibra= c.groupby('DEPARTAMENTO').agg({'Enlace':'sum'}).reset_index()
+    dfcantfibra = c.groupby(['DEPARTAMENTO', 'MES']).size().reset_index(name='Enlace')
     fig = px.bar(dfcantfibra,x="DEPARTAMENTO", y="Enlace",title='NÚMERO DE ENLACES REINCIDENTES POR ZONA',color='DEPARTAMENTO',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 
 cc1, cc2 = st.columns([50,50])
 with cc1:
-    dfcantfibra= c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index()
+    dfcantfibra = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
     fig = px.bar(dfcantfibra,x="CAUSA", y="Afectación",title='NÚMERO DE ENLACES REINCIDENTES POR ZONA',color='CAUSA',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 with cc2:
-    dffibracausa= c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index()
+    dfcantfibra = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
     fig = px.bar(dffibracausa,x="CAUSA", y="Afectación",title='CORTES DE FIBRA POR ZONA',color='CAUSA', text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
