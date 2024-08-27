@@ -9,7 +9,7 @@ import utils
 
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
 
-color_discrete_sequence=['#ef9c66','#fcdc94','#c8cfa0','#78aba8','#55ad9b']
+color_discrete_sequence=['#ef9c66','#fcdc94','#c8cfa0','#78aba8','#ace2e1','#ebc49f']
 
 st.set_page_config(
     page_title='Dashboard',
@@ -52,95 +52,49 @@ c = c.dropna(subset=['Afectación'])
 
 cc1, cc2 = st.columns([50, 50])
 with cc1:
-    dffibracausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
-    fig = px.bar(dffibracausa,x="CAUSA",y="Afectación",title='CORTES DE FIBRA POR CAUSA',color='CAUSA',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
+    dffibracausa = c.groupby(['MES']).size().reset_index(name='Afectación')
+    fig = px.bar(dffibracausa,x="MES",y="Afectación",title='CORTES DE FIBRA POR CAUSA',color='Afectación',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig), use_container_width=True)
 with cc2:
-    dfprincausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
-    fig = px.bar(dfprincausa,x="CAUSA", y="Afectación",title='PRINCIPALES CAUSAS',color='CAUSA', color_discrete_sequence=color_discrete_sequence)
+    dfprincausa = c.groupby(['MES']).size().reset_index(name='Afectación')
+    value = ['Corto Circuito','Vandalismo','Falla de Empalme de FiOp']
+    dfprincausa = c[c.CAUSA.isin(value)]
+    fig = px.bar(dfprincausa,x="MES", y="Afectación",title='PRINCIPALES CAUSAS',color='CAUSA', text_auto=',.0f',color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
     
 cc1, cc2 = st.columns([50, 50])
 with cc1:
-    dffibracausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
-    fig = px.bar(dffibracausa,x="CAUSA", y="Afectación",title='CORTES DE FIBRA POR ZONA',color='CAUSA',color_discrete_sequence=color_discrete_sequence)
+    dfcortefibra= c.groupby(['MES']).size().reset_index(name='Afectación')
+    fig = px.bar(dfcortefibra,x="MES", y="Afectación",title='CANTIDAD CORTES DE FIBRA',color='Afectación',text_auto=',.0f',color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 with cc2:
-    dffibracausa = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
+    dffibrazona = c.groupby(['MES']).size().reset_index(name='Zona')
     #dffibracausa= c.groupby('CAUSA').agg({'Afectación':'sum'}).reset_index()
-    fig = px.bar(dffibracausa,x="CAUSA", y="Afectación",title='CORTES DE FIBRA POR ZONA',color='CAUSA',color_discrete_sequence=color_discrete_sequence)
+    fig = px.bar(dffibrazona,x="MES", y="Zona",title='CORTES DE FIBRA POR ZONA',color='Zona',text_auto=',.0f',color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 
 with st.container():
-    dfcantfibra = c.groupby(['DEPARTAMENTO', 'MES']).size().reset_index(name='Enlace')
-    fig = px.bar(dfcantfibra,x="DEPARTAMENTO", y="Enlace",title='NÚMERO DE ENLACES REINCIDENTES POR ZONA',color='DEPARTAMENTO',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
+    dfcantreinc = c.groupby(['DEPARTAMENTO', 'MES']).size().reset_index(name='Zona')
+    fig = px.bar(dfcantreinc,x="DEPARTAMENTO", y="Zona",title='NÚMERO DE ENLACES REINCIDENTES POR ZONA',color='Zona',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 
 cc1, cc2 = st.columns([50,50])
 with cc1:
-    dfcantfibra = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
-    fig = px.bar(dfcantfibra,x="CAUSA", y="Afectación",title='NÚMERO DE ENLACES REINCIDENTES POR ZONA',color='CAUSA',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
+    dfcassinafec = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
+    fig = px.bar(dfcassinafec,x="CAUSA", y="Afectación",title='CORTES POR CAUSA SIN AFECTACIÓN', color='CAUSA',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 with cc2:
-    dfcantfibra = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
-    fig = px.bar(dffibracausa,x="CAUSA", y="Afectación",title='CORTES DE FIBRA POR ZONA',color='CAUSA', text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
+    dfcasconafec = c.groupby(['CAUSA', 'MES']).size().reset_index(name='Afectación')
+    fig = px.bar(dfcasconafec,x="CAUSA", y="Afectación",title='CORTES POR CAUSA CON AFECTACIÓN', color='CAUSA',text_auto=',.0f', color_discrete_sequence=color_discrete_sequence)
     fig.update_layout(showlegend=False)
     st.plotly_chart(utils.aplicarFormatoChart(fig),use_container_width=True)
 
-# c = pd.concat([df1, df2, df3], ignore_index=True)
-# c.rename(columns = {'Tipo de Tramo':'TRAMO','Causa del daño':'CAUSA','Departamento':'DEPARTAMENTO','HORA INICIO':'HORA_INICIO','HORA RECUP, DE SERICIO':'HORA_RECUPERACION'}, inplace = True)
-# c['EECC'] = c['EECC'].str.replace('cobra' , 'Cobra')
-# c['EECC'] = c['EECC'].str.replace('inmel' , 'Inmel')
-# c['Afectación'] = c['Afectación'].str.replace('si' , 'SI')
-# c['Afectación'] = c['Afectación'].str.replace('no' , 'NO')
-# c["CAUSA"] = c["CAUSA"].map(lambda x: 'Visita_Fallida' if x=="Visita Fallida" else x)
-# c["DEPARTAMENTO"] = c["DEPARTAMENTO"].map(lambda x: 'VALLE_DEL_CAUCA' if x=="VALLE DEL CAUCA" else x)
-# c = c[c['HORA_RECUPERACION'].notna()]
-# c = c.dropna( how='any', subset=['CAUSA'])
-# discard = ['Visita_Fallida']
-# c = c[~c.CAUSA.str.contains('|'.join(discard))]
-# c['MES'] = c['HORA_INICIO'].dt.strftime('%B')
-# c['AÑO'] = c['HORA_INICIO'].dt.strftime('%Y')
-# #*********** CAMPOS **********#
-# c = c.groupby(['CAUSA', 'AÑO']).size().reset_index(name='Afectación')
-# cc1 = (alt.Chart(c).mark_line().encode(x="CAUSA", y="Afectación", color='AÑO')).properties(title='CANTIDAD DE FIBRA POR CAUSA', width=300, height=400,colore=colore)
-# text = cc1.mark_text(align='center', baseline='bottom', dy=-10).encode(text='Afectación:Q')
-# st.altair_chart(cc1 + text, use_container_width=True)
-
-#
-#*********************** GRAFICA 2 **************************#
-#
-
-# c = pd.concat([df1, df2, df3], ignore_index=True)
-# c.rename(columns = {'Tipo de Tramo':'TRAMO','Causa del daño':'CAUSA','Departamento':'DEPARTAMENTO','HORA INICIO':'HORA_INICIO','HORA RECUP, DE SERICIO':'HORA_RECUPERACION','Falla de Empalme de FiOp':'FALLAEMPALME','Vandalismo':'VANDALISMO','Corto Circuito':'CCIRCUITO'}, inplace = True)
-# c['EECC'] = c['EECC'].str.replace('cobra' , 'Cobra')
-# c['EECC'] = c['EECC'].str.replace('inmel' , 'Inmel')
-# c['Afectación'] = c['Afectación'].str.replace('si' , 'SI')
-# c['Afectación'] = c['Afectación'].str.replace('no' , 'NO')
-# c["CAUSA"] = c["CAUSA"].map(lambda x: 'Visita_Fallida' if x=="Visita Fallida" else x)
-# c["DEPARTAMENTO"] = c["DEPARTAMENTO"].map(lambda x: 'VALLE_DEL_CAUCA' if x=="VALLE DEL CAUCA" else x)
-# c = c[c['HORA_RECUPERACION'].notna()]
-# c = c.dropna( how='any', subset=['CAUSA'])
-# discard = ['Visita_Fallida']
-# c = c[~c.CAUSA.str.contains('|'.join(discard))]
-# c['MES'] = c['HORA_INICIO'].dt.strftime('%B')
-# c['AÑO'] = c['HORA_INICIO'].dt.strftime('%Y')
-# #************ CAMPOS ************#
-# value = ['Corto Circuito','Vandalismo','Falla de Empalme de FiOp']
-# c = c[c.CAUSA.isin(value)]
-# c = c.groupby(['MES', 'CAUSA']).size().reset_index(name='Cantidad')
-# cc2 = (alt.Chart(c).mark_bar().encode(x="MES",y="Cantidad" , color='CAUSA')).properties(title='PRINCIPALES CAUSAS',width=400,height=400)
-# text = cc2.mark_text(align='center',baseline='middle',dy=-15,color='black').encode(text='Cantidad:Q')
-# st.altair_chart(cc2 + text, use_container_width=True)
-
-
-#
 #*********************** GRAFICA 3 **************************#
 #
 c = pd.concat([df1, df2, df3], ignore_index=True)
