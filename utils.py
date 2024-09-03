@@ -17,7 +17,7 @@ def aplicarFormatoChart(fig,controls=False,legend=False,hoverTemplate=None):
     fig.update_layout(paper_bgcolor='white')
     fig.update_layout(plot_bgcolor='white')
     fig.update_layout(showlegend=legend)
-    fig.update_layout(title_pad_l=20)
+    fig.update_layout(title_pad_l=50)
     fig.update_layout(
     #font_family="Open Sans",
     #font_color="#8dc73f",
@@ -52,17 +52,3 @@ def aplicarFormatoChart(fig,controls=False,legend=False,hoverTemplate=None):
     )
     return fig
 
-def generarTabla(df):
-    header = '</th><th>'.join(df.columns)
-    header = f'<thead><tr><th>{header}</th><tr></thead>'
-    items = ''
-    for index, row in df.iterrows():        
-        # item='</td><td>'.join(map(str,row.tolist()))
-        # item = f'<tr><td>{item}</td><tr>'
-        item= [f'<td>{x}</td>' if type(x)==str else f'<td style="text-align:right">{x:,.0f}</td>' for x in row.tolist()]        
-        item=''.join(item)
-        item = f'<tr>{item}<tr>'
-        items=items+item
-    table = f'<table class="dashboardTable">{header}<tbody>{items}</tbody></table>'
-    # return table
-    st.write(table,unsafe_allow_html=True)

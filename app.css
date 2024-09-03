@@ -1,11 +1,11 @@
 /*Estilo general para contenedores*/
 div[data-testid="stAppViewBlockContainer"] div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stVerticalBlockBorderWrapper"],
 div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stHorizontalBlock"] div[data-testid="column"] div[data-testid="stVerticalBlockBorderWrapper"]  {
-   background-color:white;
-   padding:5px;
-   border-radius:15px;        
+   background-color:rgb(255, 255, 255);
+   padding:3px;
+   border-radius:5px;        
    /* border: silver solid 2px; */
-   box-shadow: 0px 0px 10px rgba(178, 182, 192,0.3)
+   
 }
 
 /* Color etiquetas y títulos*/
@@ -17,7 +17,7 @@ label[data-testid="stMetricLabel"] p{
 /* Estilo de valor de métricas*/
 div[data-testid="stMetricValue"]{
    font-weight:bold;
-   color: #777e91;
+   color: #907791;
 }
 
 /*Estilos para tablas*/
@@ -46,7 +46,7 @@ div[data-testid="stMetricValue"]{
 }
 
 .dashboardTable tbody tr:nth-of-type(even) {
-   background-color: #f3f3f3;
+   background-color: #b12121;
 }
 
 header {
